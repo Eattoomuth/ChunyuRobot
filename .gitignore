@@ -1,6 +1,4 @@
 *.pyc
 .idea
 trash
-assets/pngs
-assets/logs
-assets/adb_logs
+assets
