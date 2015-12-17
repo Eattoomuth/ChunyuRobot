@@ -12,14 +12,21 @@ logging.basicConfig(level=logging.INFO, filemode='a')
 LOG_DIR_ROOT = '../assets/logs'
 
 run_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-run_id = run_time + '_' + str(random.randint(0, 1000000))
-time_log_path = os.path.join(LOG_DIR_ROOT, run_id + '.log')
-time_logger = logging.getLogger('time_logger')
-time_file_handler = logging.FileHandler(time_log_path)
-formatter = logging.Formatter(fmt='%(asctime)s %(message)s',
-                              datefmt='%a, %d %b %Y %H:%M:%S')
-time_file_handler.setFormatter(formatter)
-time_logger.addHandler(time_file_handler)
+
+time_logger = None
+
+
+def get_run_id():
+    global time_logger
+    run_id = run_time + '_' + str(random.randint(0, 1000000))
+    time_log_path = os.path.join(LOG_DIR_ROOT, run_id + '.log')
+    time_logger = logging.getLogger('time_logger')
+    time_file_handler = logging.FileHandler(time_log_path)
+    formatter = logging.Formatter(fmt='%(asctime)s %(message)s',
+                                  datefmt='%a, %d %b %Y %H:%M:%S')
+    time_file_handler.setFormatter(formatter)
+    time_logger.addHandler(time_file_handler)
+    return run_id
 
 
 def log_by_run_time(text, level=logging.INFO):

@@ -59,19 +59,23 @@ class ProcessTest(EvaProcess):
         # ele_start = self.find_element_by_text('私人医生')
         # ele_end = self.find_element_by_text('找医生')
         # self.scroll_ele_to_ele(ele_start, ele_end, utils.DIRECTION_UP)
-        self.scroll_from_point((500, 500), utils.DIRECTION_DOWN)
-        self.delay(5)
+        # self.scroll_from_point((500, 500), utils.DIRECTION_DOWN)
+        # self.delay(5)
+        ele = self.find_element_by_id('test_container')
+        self.log(ele.location)
 
 
-class TestRobot(EvaRobot):
-    apk_path = '../assets/apks/app-debug.apk'
-    package_name = 'me.chunyu.testapk'
-    launch_activity = '.MainActivity'
 
-if __name__ == '__main__':
-    robot = TestRobot()
-    # process_start = ProcessStartUp(robot)
-    process = ProcessTest(robot)
-    robot.start()
+# class TestRobot(EvaRobot):
+#     apk_path = '../assets/apks/app-debug.apk'
+#     package_name = 'me.chunyu.testapk'
+#     launch_activity = '.MainActivity'
+
+
+# if __name__ == '__main__':
+#     robot = TestRobot()
+#     # process_start = ProcessStartUp(robot)
+#     process = ProcessTest(robot)
+#     robot.start()
 
 

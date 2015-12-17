@@ -6,6 +6,7 @@ DIRECTION_LEFT = 2
 DIRECTION_RIGHT = 3
 
 android_imageview = '//android.widget.ImageView'
+android_button = '//android.widget.Button'
 android_textview = '//android.widget.TextView'
 android_edittext = '//android.widget.EditText'
 android_scrollview = '//android.widget.ScrollView'
