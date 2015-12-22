@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 import time
-from tools.base import EvaRobot
-from processes import process_login
+from app_test.tools.base import EvaRobot
+from app_test.robot.processes import process_login
 
 __author__ = 'wgx'
 

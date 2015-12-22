@@ -7,7 +7,7 @@ from appium import webdriver
 from appium.webdriver.common.touch_action import TouchAction
 import math
 from image_tools import draw_rec, draw_arrow
-from tools import utils
+from app_test.tools import utils
 from time import sleep
 from log_utils import log_by_run_time, get_run_id
 
