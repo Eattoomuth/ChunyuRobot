@@ -35,16 +35,23 @@ class EvaRobot(object):
     package_name = 'me.chunyu.ChunyuDoctor'
     launch_activity = '.Activities.WelcomeActivity'
 
-    def __init__(self, port, device_name):
-
+    def __init__(self, port, device_name, need_appium_server=True):
+        """
+        初始化，Appium默认支持多设备，所以如果存在多个设备需要建立多个Appium server，每个端口对应一个设备
+        :param port:    Appium server 的端口
+        :param device_name: 设备名称
+        :param need_appium_server   是否需要一个启动一个appium的server
+        注意：如果指定端口的server已存在，则会干掉原来的进程，意味着原server上的测试会挂掉
+        """
         self.port = port
         self.device_name = device_name
         self.run_id = get_run_id()
 
         # 新建一个appium server，每次执行对应一个，port不能重复
-        self.appium_log_path = os.path.join(APPIUM_LOG_DIR_ROOT, self.run_id + '.log')
-        log_by_run_time('Create appium log path : ' + os.path.abspath(self.appium_log_path))
-        self.start_appium()
+        if need_appium_server:
+            self.appium_log_path = os.path.join(APPIUM_LOG_DIR_ROOT, self.run_id + '.log')
+            log_by_run_time('Create appium log path : ' + os.path.abspath(self.appium_log_path))
+            self.start_appium()
 
         # 默认的配置，可以重写Eva来修改定制
         desired_caps = {'platformName': 'Android'}
@@ -87,7 +94,7 @@ class EvaRobot(object):
         # 启动首页，因为卸载过，原来的首页已经被干掉了
         self.driver.start_activity(self.package_name, self.launch_activity)
 
-        # 获取分辨率
+        # 获取分辨率，可能不太准，是最外层layout的大小
         eles = self.driver.find_elements_by_xpath(utils.android_framelayout)
         self.max_x = eles[0].size['width']
         self.max_y = eles[0].size['height']
@@ -159,6 +166,11 @@ class EvaRobot(object):
         self.generate_adb_logs()
         log_by_run_time('End.\n\nRun %d cases, %d passed.' % (len(self.process_list), self.pass_count))
         self.driver.quit()
+
+
+class FailException(Exception):
+    def __init__(self):
+        Exception.__init__(self)
 
 
 class EvaProcess(object):
@@ -407,6 +419,35 @@ class EvaProcess(object):
         # 输入
         self.log('input : ' + text)
         ele.send_keys(text)
+
+    def switch_to_flight_mode(self):
+        """
+        Value (Alias)      | Data | Wifi | Airplane Mode
+            -------------------------------------------------
+            0 (None)           | 0    | 0    | 0
+            1 (Airplane Mode)  | 0    | 0    | 1
+            2 (Wifi only)      | 0    | 1    | 0
+            4 (Data only)      | 1    | 0    | 0
+            6 (All network on) | 1    | 1    | 0
+        """
+        self.driver.set_network_connection(1)
+
+    def switch_to_network_open(self):
+        self.driver.set_network_connection(6)
+
+    def switch_to_network_close(self):
+        self.driver.set_network_connection(0)
+
+    def press_back(self):
+        """
+        返回
+        """
+        # 截图
+        png_log_path = self.get_next_png_path()
+        self.driver.save_screenshot(png_log_path)
+
+        self.log('Back button pressed.')
+        self.driver.keyevent(4)
 
     @staticmethod
     def delay(seconds):

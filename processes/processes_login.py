@@ -8,28 +8,6 @@ __author__ = 'wgx'
 
 # 登录的用例写这里
 
-class ProcessStartUp(EvaProcess):
-    def __init__(self, robot):
-        EvaProcess.__init__(self, robot)
-
-    def run(self):
-        """
-        第一次启动首页或者长时间未启动首页的时候必须要执行这个过程
-        """
-        # 欢迎页等待
-        self.delay(5)
-
-        # 处理update dialog
-        try:
-            self.tap_on_text('以后再说')
-        except:
-            self.log("Update dialog didn't appear")
-
-        # 处理引导
-        guide_ele = self.find_elements_by_widget(utils.android_imageview)[0]
-        self.tap_on_ele(guide_ele)
-
-
 class ProcessPhoneLogin0(EvaProcess):
     """
     正常的手机登录
